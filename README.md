@@ -1,4 +1,4 @@
-# Competitive-Programming
+# Competitive Programming
 
 These are my C++ solutions to problems from several programming contests I have participated in, including:
 
