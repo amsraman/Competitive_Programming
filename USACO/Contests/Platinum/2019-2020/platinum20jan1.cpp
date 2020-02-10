@@ -13,12 +13,12 @@ ll modx(ll a)
     return (a%MOD+MOD)%MOD;
 }
 
-int f(int a)
+int f(int a)//Better way to impl find
 {
-    return ((a == link[a])?(a):(link[a] = f(link[a])));//Better way to impl DSU
+    return ((a == link[a])?(a):(link[a] = f(link[a])));
 }
 
-void unite(int a, int b)
+void unite(int a, int b)//Non-better way to impl union
 {
     if(f(a)==f(b))
         return;
