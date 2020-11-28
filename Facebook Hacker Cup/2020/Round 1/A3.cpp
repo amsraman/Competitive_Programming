@@ -25,8 +25,7 @@ int mul(int x, int y, int md = MOD)
 int main()
 {
     freopen("perimetric_chapter_3_full_input.txt","r",stdin);
-    //freopen("output.txt","w",stdout);
-    ofstream fout("output.txt");
+    freopen("output.txt","w",stdout);
     cin >> t;
     for(int _ = 1; _<=t; _++)
     {
@@ -101,7 +100,6 @@ int main()
             perim = add(perim,add(mul(2,x[1]-x[0]),add(x[3],x[4])));
             ans = mul(ans,perim);
         }
-        fout << "Case #" << _ << ": " << ans << endl;
         cout << "Case #" << _ << ": " << ans << endl;
         rect.clear();
     }
