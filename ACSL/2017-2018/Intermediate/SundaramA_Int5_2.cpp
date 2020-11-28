@@ -1,7 +1,3 @@
-//Aditya Sundaram
-//Intermediate 5
-//Contest 2
-
 #include <iostream>
 #include <string>
 

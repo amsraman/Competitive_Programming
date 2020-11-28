@@ -1,9 +1,3 @@
-//Aditya Sundaram
-//12-20-17
-//Enloe HS- Kubik
-//INT 5 
-//Contest 1
-
 #include <iostream>
 #include <string>
 #include <stdlib.h>

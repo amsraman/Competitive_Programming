@@ -1,8 +1,3 @@
-//Aditya Sundaram
-//1/31/19
-//Enloe HS
-//Sr 5
-//Contest #2
 #include <fstream>
 #include <iostream>
 #include <vector>
