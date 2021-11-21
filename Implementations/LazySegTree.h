@@ -12,8 +12,8 @@ struct LazySegTree : public B {
     void push(int ind, int lo, int hi) {
         seg[ind] = B::upd(seg[ind], lazy[ind], lo, hi);
         if(lo != hi) {
-            lazy[2 * ind + 1] = B::upd(lazy[2 * ind + 1], lazy[ind], lo, (lo + hi) / 2);
-            lazy[2 * ind + 2] = B::upd(lazy[2 * ind + 2], lazy[ind], (lo + hi) / 2 + 1, hi);
+            lazy[2 * ind + 1] = B::comb_upd(lazy[2 * ind + 1], lazy[ind]);
+            lazy[2 * ind + 2] = B::comb_upd(lazy[2 * ind + 2], lazy[ind]);
         }
         lazy[ind] = B::e_u;
     }
@@ -68,7 +68,11 @@ struct MaxInt {
         return (a > b ? a : b);
     }
 
-    T_u upd(T_u a, T_u b, int l, int r) {
+    T_q upd(T_q a, T_u b, int l, int r) {
+        return a + b;
+    }
+
+    T_u comb_upd(T_u a, T_u b) {
         return a + b;
     }
 };

@@ -1,24 +1,11 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
-struct suffix_array {
+struct SuffixArray {
     int n, sigma;
     string str;
     vector<int> suf_arr, kasai, lcp_rank;
 
-    suffix_array(int n, int sigma): n(n), sigma(sigma), suf_arr(n), kasai(n), lcp_rank(n) {};
-
-    int ctoi(char c) {
-        if(c == '$') {
-            return 0;
-        }
-        return 1 + (c - 'a');
-    }
-
-    void construct_from_string(string s) {
+    SuffixArray(int n, string str, int sigma): n(n), str(str), sigma(sigma), suf_arr(n), kasai(n), lcp_rank(n) {
         int eq_classes = 1;
-        ++n, str = s + '$';
+        ++n, str += '$';
         vector<int> cnt(max(n, sigma), 0), c(n), sa_next(n), c_next(n);
         suf_arr.resize(n);
         for(int i = 0; i < n; i++) {
@@ -32,7 +19,7 @@ struct suffix_array {
         }
         c[suf_arr[0]] = 0;
         for(int i = 1; i < n; i++) {
-            if(s[suf_arr[i - 1]] != s[suf_arr[i]]) {
+            if(str[suf_arr[i - 1]] != str[suf_arr[i]]) {
                 ++eq_classes;
             }
             c[suf_arr[i]] = eq_classes - 1;
@@ -59,6 +46,14 @@ struct suffix_array {
             swap(c, c_next);
         }
         suf_arr.erase(suf_arr.begin()), --n;
+        construct_lcp();
+    };
+
+    int ctoi(char c) {
+        if(c == '$') {
+            return 0;
+        }
+        return 1 + (c - 'a');
     }
 
     void construct_lcp() {
@@ -82,6 +77,7 @@ struct suffix_array {
     }
 
     int lcp(int sf1, int sf2) {
-        // return rmq of something
+        // return rmq of something idk I'll figure this out later
+        return 0;
     }
 };

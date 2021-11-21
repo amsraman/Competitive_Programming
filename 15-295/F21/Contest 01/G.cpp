@@ -38,7 +38,7 @@ void fwht(vector<ll> & a, bool inv) {
     }
     if(inv) {
         for(int i = 0; i < sz; i++) {
-            a[i] /= (1 << m);
+            a[i] >>= m;
         }
     }
 }
