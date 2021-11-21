@@ -1,6 +1,8 @@
 # Competitive Programming
 
-Competitive programming is fun :). I've competed in several algorithmic programming competitions over the past few years; below are a few of the major ones:
+Competitive programming is fun :)
+
+I've competed in several algorithmic programming competitions over the past few years; below are a few of the major ones:
 
 * USA Computing Olympiad (USACO)
 * Facebook Hacker Cup
