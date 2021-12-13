@@ -4,7 +4,7 @@ typedef long double ld;
 using namespace std;
 
 int n, x[100000], y[100000];
-ld pow2[100001], den = 1.0, ans;
+ld pow2[100001], den, ans;
 
 ld area_of_triangle(int i, int j, int k) {
     ld sd1 = (ld) x[i] * y[j] + (ld) x[j] * y[k] + (ld) x[k] * y[i];
