@@ -33,9 +33,9 @@ struct FenwickTree {
     }
 };
 
-int n, m, q, a[60000], val[60000], pos[60000], cur = -1, num[60000], lazy[(1 << 16)], fibs[60002], seg1[1 << 16], seg2[1 << 16], ans[60000]; 
-array<int, 2> ord[60000];
-array<int, 4> qrs[60000];
+int n, m, q, a[30000], val[30000], pos[30000], cur = -1, num[30000], fibs[30002], seg1[1 << 16], seg2[1 << 16], lazy[(1 << 16)], ans[30000]; 
+array<int, 2> ord[30000];
+array<int, 4> qrs[30000];
 
 int add(int x, int y) {
     return (x + y >= m ? x + y - m : x + y);
