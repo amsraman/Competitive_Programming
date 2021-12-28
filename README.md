@@ -10,4 +10,4 @@ I've competed in several algorithmic programming competitions over the past few 
 * ACM Intercollegiate Programming Contest (ICPC)
 * 15-295 (CMU's Competitive Programming Class/Club)
 
-Here are my solutions to problems from several of them (as well as a few templates I use), all are in C++.
+Here are my solutions to problems from several of them (as well as a few templates I use), all are in C++. Also, every solution here is complete.
