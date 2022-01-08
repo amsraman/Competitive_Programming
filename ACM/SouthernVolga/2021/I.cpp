@@ -1,8 +1,15 @@
+#include <bits/stdc++.h>
+typedef long long ll;
+#define f first
+#define s second
+
+using namespace std;
+
 template <typename T_f, typename T_c>
 struct CostFlowNetwork {
     size_t n, m = 0;
     T_f f_inf = 0x3f3f3f3f;
-    T_c c_inf = 0x3f3f3f3f;
+    T_c c_inf = 0xfffffffffff;
     vector<pair<size_t, size_t>> path;
     vector<T_c> dist;
     vector<vector<pair<size_t, size_t>>> graph;
@@ -69,3 +76,28 @@ struct CostFlowNetwork {
         return {flow, cost};
     }
 };
+
+int n, k, nc, l[5000], r[5000], c[5000];
+map<int, int> ind;
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cin >> n >> k;
+    for(int i = 0; i < n; i++) {
+        cin >> l[i] >> r[i] >> c[i];
+        ind[l[i]] = ind[r[i] + 1] = 0;
+    }
+    for(auto it: ind) {
+        ind[it.f] = nc++;
+    }
+    CostFlowNetwork<int, ll> mcmf(nc + 2);
+    for(int i = 0; i < n; i++) {
+        mcmf.add_edge(ind[l[i]] + 1, ind[r[i] + 1] + 1, 1, -c[i]);
+    }
+    mcmf.add_edge(0, 1, k, 0), mcmf.add_edge(nc, nc + 1, k, 0);
+    for(int i = 0; i < nc; i++) {
+        mcmf.add_edge(i + 1, i + 2, 0x3f3f3f3f, 0);
+    }
+    cout << -mcmf.min_cost_max_flow(0, nc + 1).s << '\n';
+}
