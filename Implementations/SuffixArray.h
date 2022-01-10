@@ -1,9 +1,12 @@
 struct SuffixArray {
-    int n, sigma;
-    string str;
-    vector<int> suf_arr, kasai, lcp_rank;
+    const int sigma = 27;
 
-    SuffixArray(int n, string str, int sigma): n(n), str(str), sigma(sigma), suf_arr(n), kasai(n), lcp_rank(n) {
+    int n;
+    string str;
+    vector<int> suf_arr, suf_pos, kasai;
+    vector<vector<int>> rmq;
+
+    SuffixArray(int n, string str): n(n), str(str), suf_arr(n), suf_pos(n), kasai(n) {
         int eq_classes = 1;
         ++n, str += '$';
         vector<int> cnt(max(n, sigma), 0), c(n), sa_next(n), c_next(n);
@@ -46,6 +49,9 @@ struct SuffixArray {
             swap(c, c_next);
         }
         suf_arr.erase(suf_arr.begin()), --n;
+        for(int i = 0; i < n; i++) {
+            suf_pos[suf_arr[i]] = i;
+        }
         construct_lcp();
     };
 
@@ -57,27 +63,39 @@ struct SuffixArray {
     }
 
     void construct_lcp() {
-        vector<int> pos(n);
-        for(int i = 0; i < n; i++) {
-            pos[suf_arr[i]] = i;
-        }
         int len = 0;
         for(int i = 0; i < n; i++) {
-            if(pos[i] == n - 1) {
+            if(suf_pos[i] == n - 1) {
                 len = kasai[n - 1] = 0;
                 continue;
             }
-            int j = suf_arr[pos[i] + 1];
+            int j = suf_arr[suf_pos[i] + 1];
             while(i + len < n && j + len < n && str[i + len] == str[j + len]) {
                 ++len;
             }
-            kasai[pos[i]] = len;
+            kasai[suf_pos[i]] = len;
             len = max(0, len - 1);
+        }
+        rmq.resize(n, vector<int>(__lg(n) + 1));
+        for(int i = 0; i < n; i++) { 
+            rmq[i][0] = kasai[i];
+        }
+        for(int i = 1; i <= __lg(n); i++) {
+            for(int j = 0; j < n; j++) {
+                rmq[j][i] = min(rmq[j][i - 1], rmq[min(n - 1, j + (1 << (i - 1)))][i - 1]);
+            }
         }
     }
 
     int lcp(int sf1, int sf2) {
-        // return rmq of something idk I'll figure this out later
-        return 0;
+        if(sf1 == sf2) { 
+            return n - sf1;
+        }
+        int pos1 = suf_pos[sf1], pos2 = suf_pos[sf2];
+        if(pos1 > pos2) {
+            swap(pos1, pos2);
+        }
+        int lv = __lg(pos2 - pos1);
+        return min(rmq[pos1][lv], rmq[pos2 - (1 << lv)][lv]);
     }
 };
