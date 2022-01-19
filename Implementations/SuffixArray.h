@@ -1,5 +1,5 @@
 struct SuffixArray {
-    const int sigma = 27;
+    const static int sigma = 27;
 
     int n;
     string str;
