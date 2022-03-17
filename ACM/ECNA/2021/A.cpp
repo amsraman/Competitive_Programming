@@ -2,91 +2,40 @@
 
 using namespace std;
 
-int t, p, par[200], dep[200], nc, tot, root;
-map<string,int> ind;
-vector<int> g[200];
-string pr, cd, name[200];
+const int INF = 500;
 
-void dfs(int u, int v)
-{
-    for(int i: g[u])
-        if(i!=v)
-            dep[i] = dep[u]+1, dfs(i,u);
-}
+int n, dp[100001], adds[4] = {1, 11};
 
-int lca(int u, int v)
-{
-    if(dep[u]<dep[v])
-        swap(u,v);
-    while(dep[u]>dep[v])
-        u = par[u];
-    while(u!=v)
-        u = par[u], v = par[v];
-    return v;
-}
-
-int main()
-{
-    cin >> t >> p;
-    for(int i = 0; i<200; i++)
-        par[i] = -1;
-    for(int i = 0, d; i<t; i++)
-    {
-        cin >> pr >> d;
-        if(!ind.count(pr))
-            name[nc] = pr, ind[pr] = nc++;
-        for(int j = 0; j<d; j++)
-        {
-            cin >> cd;
-            if(!ind.count(cd))
-                name[nc] = cd, ind[cd] = nc++;
-            g[ind[pr]].push_back(ind[cd]);
-            par[ind[cd]] = ind[pr];
-        }
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cin >> n;
+    int cur = 1, num = 1;
+    for(int i = 1; i <= n; i++) {
+        dp[i] = INF;
     }
-    while(par[root]!=-1)
-        root = par[root];
-    dfs(root,root);
-    for(int i = 0; i<p; i++)
-    {
-        cin >> pr >> cd;
-        int ind1 = ind[pr], ind2 = ind[cd], anc = lca(ind1,ind2);
-        //One is a direct descendent of the other
-        if(anc==ind1||anc==ind2)
-        {
-            if(dep[ind1]<dep[ind2])
-                swap(ind1,ind2);
-            if(dep[ind1]-dep[ind2]==1)
-                cout << name[ind1] << " is the child of " << name[ind2] << endl;
-            else if(dep[ind1]-dep[ind2]==2)
-                cout << name[ind1] << " is the grandchild of " << name[ind2] << endl;
-            else
-            {
-                cout << name[ind1] << " is the ";
-                for(int j = 0; j<dep[ind1]-dep[ind2]-2; j++)
-                    cout << "great ";
-                cout << "grandchild of " << name[ind2] << endl;
+    while(cur <= n) {
+        dp[cur] = num;
+        cur = 10 * cur + 1, ++num;
+    }
+    for(int i = 1; i <= n; i++) {
+        for(int j = 0; j < 2; j++) {
+            if(i > adds[j]) {
+                dp[i] = min(dp[i], dp[i - adds[j]] + dp[adds[j]]);
             }
         }
-        else if(dep[ind1]==dep[anc]+1&&dep[ind2]==dep[anc]+1)
-            cout << name[ind1] << " and " << name[ind2] << " are siblings" << endl;
-        else
-        {
-            cout << name[ind1] << " and " << name[ind2] << " are " << min(dep[ind1],dep[ind2])-dep[anc]-1;
-            if((min(dep[ind1],dep[ind2])-dep[anc]-1)%10==1&&(min(dep[ind1],dep[ind2])-dep[anc]-1)!=11)
-                cout << "st";
-            else if((min(dep[ind1],dep[ind2])-dep[anc]-1)%10==2&&(min(dep[ind1],dep[ind2])-dep[anc]-1)!=12)
-                cout << "nd";
-            else if((min(dep[ind1],dep[ind2])-dep[anc]-1)%10==3&&(min(dep[ind1],dep[ind2])-dep[anc]-1)!=13)
-                cout << "rd";
-            else
-                cout << "th";            
-            cout << " cousins";
-            if(abs(dep[ind1]-dep[ind2])==1)
-                cout << ", 1 time removed";
-            else if(abs(dep[ind1]-dep[ind2])>1)
-                cout << ", " << abs(dep[ind1]-dep[ind2]) << " times removed";
-            cout << endl;
+        for(int j = 2; j * j <= i; j++) {
+            if(i % j == 0) {
+                dp[i] = min(dp[i], dp[j] + dp[i / j]);
+            }
+        }
+        int cur = i / 10, p10 = 10;
+        while(cur > 0) {
+            if(i - cur * p10 >= p10 / 10) {
+                dp[i] = min(dp[i], dp[cur] + dp[i - cur * p10]);
+            }
+            cur /= 10, p10 *= 10;
         }
     }
+    cout << dp[n] << '\n';
 }

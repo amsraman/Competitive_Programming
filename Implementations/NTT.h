@@ -57,9 +57,9 @@ void ntt_conv(vector<int> & a, vector<int> & b) {
         pow <<= 1;
     }
     a.resize(pow), b.resize(pow);
-    ntt(a, false), fft(b, false);
+    ntt(a, false), ntt(b, false);
     for(int i = 0; i < pow; i++) {
-        a[i] *= b[i];
+        a[i] = mul(a[i], b[i]);
     }
     ntt(a, true);
 }

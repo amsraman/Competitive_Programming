@@ -1,99 +1,84 @@
 #include <bits/stdc++.h>
+typedef long double ld;
+#define f first
+#define s second
 
 using namespace std;
 
-int n, m, lst, aug[1000][11], ans[10][10];
-string init, enc;
-bool many, none;
+const ld INF = 1e18, eps = 1e-7;
 
-int conv(char c)
-{
-    if(c>='A'&&c<='Z')
-        return (c-'A');
-    if(c>='0'&&c<='9')
-        return 26+(c-'0');
-    return 36;
+int n, circ_left;
+ld rad[100], rat[100], ans;
+pair<ld, ld> points[100];
+bool done[100];
+
+ld dist(pair<ld, ld> x, pair<ld, ld> y) {
+    return sqrt((x.f - y.f) * (x.f - y.f) + (x.s - y.s) * (x.s - y.s));
 }
 
-int mul(int x, int y)
-{
-    return (x*y)%37;
-}
-
-int inv(int x)
-{
-    int ret = 1, b = 35;
-    while(b)
-    {
-        if(b&1)
-            ret = mul(ret,x);
-        x = mul(x,x), b>>=1;
-    }
-    return ret;
-}
-
-void gauss()
-{
-    for(int row = 0, col = 0; (row<m&&col<n); col++)
-    {
-        int tmp = row;
-        while(tmp<m&&aug[tmp][col]==0)
-            ++tmp;
-        if(tmp==m)
-            continue;
-        for(int j = 0; j<=n; j++)
-            swap(aug[row][j],aug[tmp][j]);
-        for(int j = n; j>=col; j--)
-            aug[row][j] = mul(aug[row][j],inv(aug[row][col]));
-        for(int j = row+1; j<m; j++)
-            if(aug[j][col]!=0)
-                for(int k = n; k>=col; k--)
-                    aug[j][k] = (aug[j][k]+37-mul(aug[j][col],aug[row][k]))%37;
-        lst = row++;
-    }
-    for(int i = lst, ind = 0; i>=0; i--, ind = 0)
-    {
-        while(ind<n&&aug[i][ind]==0)
-            ++ind;
-        for(int j = i-1; j>=0; j--)
-            if(aug[j][ind]!=0)
-                for(int k = n; k>=ind; k--)
-                    aug[j][k] = (aug[j][k]+37-mul(aug[j][ind],aug[i][k]))%37;
+void collect(int u, vector<vector<int>> & g, vector<int> & comp, vector<bool> & vis) {
+    vis[u] = true;
+    comp.push_back(u);
+    for(int v: g[u]) {
+        if(!vis[v]) {
+            collect(v, g, comp, vis);
+        }
     }
 }
 
-int main()
-{
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
     cin >> n;
-    cin.ignore();
-    getline(cin,init);
-    getline(cin,enc);
-    m = init.length()/n;
-    for(int i = 0; i<n; i++)
-    {
-        for(int j = 0; j<m; j++)
-            for(int k = 0; k<n; k++)
-                aug[j][k] = conv(init[n*j+k]);
-        for(int j = 0; j<m; j++)
-            aug[j][n] = conv(enc[n*j+i]);
-        lst = -1, gauss();
-        for(int j = lst+1; j<m; j++)
-            none|=(aug[j][n]!=0);
-        many|=(lst<n-1);
-        for(int j = 0; j<n; j++)
-            ans[i][j] = aug[j][n];
+    for(int i = 0; i < n; i++) {
+        cin >> points[i].f >> points[i].s >> rad[i] >> rat[i];
     }
-    if(none)
-        cout << "No solution" << endl;
-    else if(many)
-        cout << "Too many solutions" << endl;
-    else
-    {
-        for(int i = 0; i<n; i++)
-        {
-            for(int j = 0; j<n; j++)
-                cout << ans[i][j] << " ";
-            cout << endl;
+    circ_left = n;
+    while(circ_left > 1) {
+        int ic = -1;
+        ld t_min = INF;
+        vector<vector<int>> g(n);
+        for(int i = 0; i < n; i++) {
+            for(int j = 0; j < n; j++) {
+                if(i != j && !done[i] && !done[j]) {
+                    t_min = min(t_min, (dist(points[i], points[j]) - rad[i] - rad[j]) / (rat[i] + rat[j]));
+                    if(rad[i] + rad[j] > dist(points[i], points[j]) - eps) {
+                        ic = i;
+                        g[i].push_back(j);
+                    }
+                }
+            }
+        }
+        if(ic == -1) {
+            for(int i = 0; i < n; i++) {
+                if(!done[i]) {
+                    rad[i] += t_min * rat[i];
+                }
+            }
+        } else {
+            vector<int> comp;
+            vector<bool> vis(n, false);
+            collect(ic, g, comp, vis);
+            pair<ld, ld> avg = {0, 0};
+            ld mx_rat = 0, area_tot = 0;
+            for(int i: comp) {
+                avg.f += points[i].f;
+                avg.s += points[i].s;
+                area_tot += rad[i] * rad[i];
+                mx_rat = max(mx_rat, rat[i]);
+                if(i != ic) {
+                    done[i] = true;
+                    --circ_left;
+                }
+            }
+            points[ic] = {avg.f / (ld) comp.size(), avg.s / (ld) comp.size()};
+            rad[ic] = sqrt(area_tot);
+            rat[ic] = mx_rat;
+        }
+    }
+    for(int i = 0; i < n; i++) {
+        if(!done[i]) {
+            cout << fixed << setprecision(7) << points[i].f << " " << points[i].s << '\n' << rad[i] << '\n';
         }
     }
 }
