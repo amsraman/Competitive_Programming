@@ -9,25 +9,31 @@ struct LazySegTree : public B {
 
     LazySegTree(size_t n): n(n), seg(2 * n, B::e_q), lazy(2 * n, B::e_u) {};
 
+    void app(int ind, int lo, int hi, T_u delta) {
+        seg[ind] = B::upd(seg[ind], delta, lo, hi);
+        lazy[ind] = B::comb_upd(delta, lazy[ind]);
+    }
+
     void push(int ind, int lo, int hi) {
-        seg[ind] = B::upd(seg[ind], lazy[ind], lo, hi);
         if(lo != hi) {
-            lazy[2 * ind + 1] = B::comb_upd(lazy[2 * ind + 1], lazy[ind]);
-            lazy[2 * ind + 2] = B::comb_upd(lazy[2 * ind + 2], lazy[ind]);
+            int mid = (lo + hi) >> 1;
+            app(2 * ind + 1, lo, mid, lazy[ind]);
+            app(2 * ind + 2, mid + 1, hi, lazy[ind]);
         }
         lazy[ind] = B::e_u;
     }
 
     T_q qry(int lo, int hi, int lo_ind, int hi_ind, int ind) {
-        push(ind, lo_ind, hi_ind);
-        if(lo > hi_ind || hi < lo_ind) {
-            return B::e_q;
-        }
         if(lo <= lo_ind && hi_ind <= hi) {
             return seg[ind];
         }
-        int mid = (lo_ind + hi_ind) / 2;
-        return B::comb(qry(lo, hi, lo_ind, mid, 2 * ind + 1), qry(lo, hi, mid + 1, hi_ind, 2 * ind + 2));
+        int mid = (lo_ind + hi_ind) >> 1;
+        if(lazy[ind] != B::e_u) {
+            push(ind, lo_ind, hi_ind);
+        }
+        T_q op1 = (lo <= mid ? qry(lo, hi, lo_ind, mid, 2 * ind + 1) : B::e_q);
+        T_q op2 = (mid < hi ? qry(lo, hi, mid + 1, hi_ind, 2 * ind + 2) : B::e_q);
+        return B::comb(op1, op2);
     }
 
     T_q qry(int lo, int hi) {
@@ -35,18 +41,20 @@ struct LazySegTree : public B {
     }
 
     void upd(int lo, int hi, T_u delta, int lo_ind, int hi_ind, int ind) {
-        push(ind, lo_ind, hi_ind);
-        if(lo > hi_ind || hi < lo_ind) {
-            return;
-        }
         if(lo <= lo_ind && hi_ind <= hi) {
-            lazy[ind] = delta;
-            push(ind, lo_ind, hi_ind);
+            app(ind, lo_ind, hi_ind, delta);
             return;
         }
-        int mid = (lo_ind + hi_ind) / 2;
-        upd(lo, hi, delta, lo_ind, mid, 2 * ind + 1);
-        upd(lo, hi, delta, mid + 1, hi_ind, 2 * ind + 2);
+        int mid = (lo_ind + hi_ind) >> 1;
+        if(lazy[ind] != B::e_u) {
+            push(ind, lo_ind, hi_ind);
+        }
+        if(lo <= mid) {
+            upd(lo, hi, delta, lo_ind, mid, 2 * ind + 1);
+        }
+        if(mid < hi) {
+            upd(lo, hi, delta, mid + 1, hi_ind, 2 * ind + 2);
+        }
         seg[ind] = B::comb(seg[2 * ind + 1], seg[2 * ind + 2]);
     }
 
