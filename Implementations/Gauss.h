@@ -1,23 +1,5 @@
-int mul(int x, int y) {
-    return (1LL * x * y) % mod;
-}
-
-int exp(int x, int y) {
-    int ret = 1;
-    while(y) {
-        if(y & 1) {
-            ret = mul(ret, x);
-        }
-        x = mul(x, x), y >>= 1;
-    }
-    return ret;
-}
-
-int dvd(int x, int y) {
-    return mul(x, exp(y, mod - 2));
-}
-
-void gauss(vector<vector<int>> & aug) {
+template<typename T>
+void gauss(vector<vector<T>> & aug) {
     if(aug.empty()) {
         return;
     }
@@ -34,12 +16,12 @@ void gauss(vector<vector<int>> & aug) {
             swap(aug[row][i], aug[tmp][i]);
         }
         for(int i = n; i >= col; i--) {
-            aug[row][i] = dvd(aug[row][i], aug[row][col]);
+            aug[row][i] /= aug[row][col];
         }
         for(int i = row + 1; i < m; i++) {
             if(aug[i][col] != 0) {
                 for(int j = n; j >= col; j--) {
-                    aug[i][j] = (aug[i][j] - mul(aug[i][col], aug[row][j]) + mod) % mod;
+                    aug[i][j] -= aug[i][col] * aug[row][j];
                 }
             }
         }
@@ -52,7 +34,7 @@ void gauss(vector<vector<int>> & aug) {
         for(int j = i - 1; j >= 0; j--) {
             if(aug[j][ind] != 0) {
                 for(int k = n; k >= ind; k--) {
-                    aug[j][k] = (aug[j][k] - mul(aug[j][ind], aug[i][k]) + mod) % mod;
+                    aug[j][k] -= aug[j][ind] * aug[i][k];
                 }
             }
         }
