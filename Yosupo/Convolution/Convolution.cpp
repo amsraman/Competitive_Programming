@@ -1,3 +1,8 @@
+// 307 ms
+#include <bits/stdc++.h>
+
+using namespace std;
+
 namespace NTT {
     const int mod = 998244353;
 
@@ -63,4 +68,23 @@ namespace NTT {
         }
         ntt(a, true);
     }
+}
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    int n, m;
+    cin >> n >> m;
+    vector<int> a(n), b(m);
+    for(int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+    for(int i = 0; i < m; i++) {
+        cin >> b[i];
+    }
+    NTT::ntt_conv(a, b);
+    for(int i = 0; i < n + m - 1; i++) {
+        cout << a[i] << " ";
+    }
+    cout << '\n';
 }

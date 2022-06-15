@@ -63,7 +63,7 @@ struct LazySegTree : public B {
     }
 };
 
-// Sample MixIn
+// Sample Monoid
 
 struct MaxInt {
     using T_q = int;

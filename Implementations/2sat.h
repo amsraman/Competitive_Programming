@@ -1,14 +1,10 @@
-#include <bits/stdc++.h>
-
-using namespace std;
-
-struct two_sat {
+struct TwoSat {
     int var_count, time;
     vector<int> scc, lp, assignment;
     stack<int> dfs_stack;
     vector<vector<int>> implication_graph;
     
-    two_sat(int n = 0): var_count(n), implication_graph(2 * n) {}
+    TwoSat(int n = 0): var_count(n), implication_graph(2 * n) {}
 
     int add_var() {
         implication_graph.emplace_back();
@@ -18,11 +14,16 @@ struct two_sat {
 
     void add_clause(int u, int v) {
         implication_graph[u ^ 1].push_back(v);
+        implication_graph[v ^ 1].push_back(u);
     }
 
     void either(int u, int v) {
         add_clause(u, v);
         add_clause(u ^ 1, v ^ 1);
+    }
+
+    void same(int u, int v) {
+        either(u, v ^ 1);
     }
 
     void set(int u) {

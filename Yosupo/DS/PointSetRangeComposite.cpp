@@ -1,3 +1,12 @@
+// 301 ms
+#include <bits/stdc++.h>
+#define f first
+#define s second
+
+using namespace std;
+
+const int mod = 998244353;
+
 template<class B>
 struct SegTree : public B {
     using T = typename B::T;
@@ -39,13 +48,38 @@ struct SegTree : public B {
     }
 };
 
-// Sample Monoid
-
-struct MaxInt {
-    using T = int;
-    const T e = 0;
+struct Info {
+    using T = pair<int, int>;
+    const T e = {1, 0};
 
     T comb(T a, T b) {
-        return max(a, b);
+        return {(1LL * a.f * b.f) % mod, (1LL * b.f * a.s + b.s) % mod};
     }
 };
+
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    int n, q;
+    cin >> n >> q;
+    vector<pair<int, int>> a(n);
+    for(int i = 0; i < n; i++) {
+        cin >> a[i].f >> a[i].s;
+    }
+    SegTree<Info> seg(a);
+    while(q--) {
+        int type;
+        cin >> type;
+        if(type == 0) {
+            int p, c, d;
+            cin >> p >> c >> d;
+            seg.upd(p, {c, d});
+        } else {
+            int l, r, x;
+            cin >> l >> r >> x;
+            pair<int, int> eq = seg.qry(l, r - 1);
+            cout << (1LL * eq.f * x + eq.s) % mod << '\n';
+        }
+    }
+}

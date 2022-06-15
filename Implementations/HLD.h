@@ -1,8 +1,11 @@
-// by no means done, WIP :)
+// Still WIP I guess
 template<class B>
 struct HLD : public B {
     size_t n;
-    vector<int> 
+    vector
+    vector<vector<int>> graph;
+
+    HLD(vector<vector<int>> & g) : n(g.size()), g(g)
 
     void dfs_sz(int v = 0) {
         sz[v] = 1;
