@@ -1,3 +1,12 @@
+// 647 ms
+#include <bits/stdc++.h>
+#define f first
+#define s second
+
+using namespace std;
+
+const int mod = 998244353;
+
 template<class B>
 struct LazySegTree : public B {
     using T_q = typename B::T_q;
@@ -80,24 +89,44 @@ struct LazySegTree : public B {
     }
 };
 
-// Sample Monoid
-
-struct MaxInt {
+struct Monoid {
     using T_q = int;
     const T_q e_q = 0;
 
-    using T_u = int;
-    const T_u e_u = 0;
+    using T_u = pair<int, int>;
+    const T_u e_u = {1, 0};
 
     T_q comb(T_q a, T_q b) {
-        return (a > b ? a : b);
+        return (a + b >= mod ? a + b - mod : a + b);
     }
 
     T_q upd(T_q a, T_u b, int l, int r) {
-        return a + b;
+        return (1LL * b.f * a + 1LL * b.s * (r - l + 1)) % mod;
     }
 
     T_u comb_upd(T_u a, T_u b) {
-        return a + b;
+        // a after b
+        return {(1LL * a.f * b.f) % mod, (1LL * a.f * b.s + a.s) % mod};
     }
 };
+
+int main() {
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    int n, q;
+    cin >> n >> q;
+    vector<int> a(n);
+    for(int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+    LazySegTree<Monoid> lst(a);
+    for(int i = 0, t, l, r, b, c; i < q; i++) {
+        cin >> t >> l >> r;
+        if(t == 0) {
+            cin >> b >> c;
+            lst.upd(l, r - 1, {b, c});
+        } else {
+            cout << lst.qry(l, r - 1) << '\n';
+        }
+    }
+}
