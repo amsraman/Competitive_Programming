@@ -80,8 +80,6 @@ struct LazySegTree : public B {
     }
 };
 
-// Sample Monoid
-
 struct MaxInt {
     using T_q = int;
     const T_q e_q = 0;
@@ -98,6 +96,7 @@ struct MaxInt {
     }
 
     T_u comb_upd(T_u a, T_u b) {
+        // a after b
         return a + b;
     }
 };
