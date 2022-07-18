@@ -1,7 +1,7 @@
 template <typename T>
 struct FlowNetwork {
     size_t n;
-    T INF = 0x3f3f3f3f;
+    T INF = numeric_limits<T>::max();
     vector<size_t> level, ptr;
     vector<vector<size_t>> graph;
     vector<vector<T>> init_capacity, edge_capacity;

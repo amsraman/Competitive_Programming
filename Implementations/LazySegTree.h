@@ -1,4 +1,4 @@
-template<class B>
+template <class B>
 struct LazySegTree : public B {
     using T_q = typename B::T_q;
     using T_u = typename B::T_u;

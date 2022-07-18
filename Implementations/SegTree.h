@@ -1,4 +1,4 @@
-template<class B>
+template <class B>
 struct SegTree : public B {
     using T = typename B::T;
 

@@ -1,5 +1,5 @@
-template<typename T>
-void gauss(vector<vector<T>> & aug) {
+template <typename T>
+void Gauss(vector<vector<T>> & aug) {
     if(aug.empty()) {
         return;
     }

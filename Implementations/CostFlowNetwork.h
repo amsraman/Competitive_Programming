@@ -1,8 +1,8 @@
 template <typename T_f, typename T_c>
 struct CostFlowNetwork {
     size_t n, m = 0;
-    T_f f_inf = 0x3f3f3f3f;
-    T_c c_inf = 0x3f3f3f3f;
+    T_f f_inf = numeric_limits<T_f>::max();
+    T_c c_inf = numeric_limits<T_c>::max();
     vector<pair<size_t, size_t>> path;
     vector<T_c> dist;
     vector<vector<pair<size_t, size_t>>> graph;

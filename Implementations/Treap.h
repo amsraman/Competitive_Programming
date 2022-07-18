@@ -1,3 +1,4 @@
+// This is ok but I need to make it better
 struct Node {
     int key, priority, sz;
     Node *l, *r;
