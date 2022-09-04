@@ -45,9 +45,7 @@ struct LazySegTree : public B {
             return seg[ind];
         }
         int mid = (lo_ind + hi_ind) >> 1;
-        if(lazy[ind] != B::e_u) {
-            push(ind, lo_ind, hi_ind);
-        }
+        if(lazy[ind] != B::e_u) push(ind, lo_ind, hi_ind);
         T_q op1 = (lo <= mid ? qry(lo, hi, lo_ind, mid, 2 * ind + 1) : B::e_q);
         T_q op2 = (mid < hi ? qry(lo, hi, mid + 1, hi_ind, 2 * ind + 2) : B::e_q);
         return B::comb(op1, op2);
@@ -63,15 +61,9 @@ struct LazySegTree : public B {
             return;
         }
         int mid = (lo_ind + hi_ind) >> 1;
-        if(lazy[ind] != B::e_u) {
-            push(ind, lo_ind, hi_ind);
-        }
-        if(lo <= mid) {
-            upd(lo, hi, delta, lo_ind, mid, 2 * ind + 1);
-        }
-        if(mid < hi) {
-            upd(lo, hi, delta, mid + 1, hi_ind, 2 * ind + 2);
-        }
+        if(lazy[ind] != B::e_u) push(ind, lo_ind, hi_ind);
+        if(lo <= mid) upd(lo, hi, delta, lo_ind, mid, 2 * ind + 1);
+        if(mid < hi) upd(lo, hi, delta, mid + 1, hi_ind, 2 * ind + 2);
         seg[ind] = B::comb(seg[2 * ind + 1], seg[2 * ind + 2]);
     }
 
