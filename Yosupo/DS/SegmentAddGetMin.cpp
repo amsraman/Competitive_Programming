@@ -1,7 +1,10 @@
+// 985 ms
 #include <bits/stdc++.h>
 typedef long long ll;
 
 using namespace std;
+
+const ll INF = 2e18;
 
 template <typename T, class L>
 struct LiChaoTree {

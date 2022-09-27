@@ -2,8 +2,7 @@
 
 using namespace std;
 
-string op;
-string num1, num2, num3;
+string op, num1, num2, num3;
 
 bool is_valid(string n1, string n2, string n3) {
     int i1 = atoi(n1.c_str());
@@ -26,7 +25,7 @@ string format(string n1, string n2, string n3) {
 string get_sol(string n1, string n2, string n3) {
     int len1 = n1.length(), len2 = n2.length(), len3 = n3.length();
     for(int i = 0; i < len1 - 1; i++) {
-	for(int j = 0; j < len2 - 1; j++) {
+	    for(int j = 0; j < len2 - 1; j++) {
             string swp1 = get_substr(n2, 0, j) + get_substr(n1, i + 1, len1 - 1);
             string swp2 = get_substr(n1, 0, i) + get_substr(n2, j + 1, len2 - 1);
             if(is_valid(swp1, swp2, n3)) {
