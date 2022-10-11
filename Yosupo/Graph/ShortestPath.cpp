@@ -1,4 +1,4 @@
-// 328 ms
+// 340 ms
 #include <bits/stdc++.h>
 typedef long long ll;
 
@@ -18,18 +18,18 @@ int main() {
     }
     vector<int> pv(n, -1), path;
     vector<ll> dist(n, INF);
-    priority_queue<pair<ll, int>> q;
+    priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<pair<ll, int>>> q;
     q.push({0, s}), dist[s] = 0;
     while(!q.empty()) {
         pair<ll, int> tp = q.top(); q.pop();
-        if(-tp.first > dist[tp.second]) {
+        if(tp.first > dist[tp.second]) {
             continue;
         }
         int u = tp.second;
         for(pair<int, ll> e: g[u]) {
             if(dist[u] + e.second < dist[e.first]) {
                 dist[e.first] = dist[u] + e.second, pv[e.first] = u;
-                q.push({-dist[e.first], e.first});
+                q.push({dist[e.first], e.first});
             }
         }
     }

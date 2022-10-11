@@ -64,19 +64,15 @@ struct LazySegTree : public B {
 
 struct MaxInt {
     using T_q = int;
-    const T_q e_q = 0;
-
     using T_u = int;
+    const T_q e_q = 0;
     const T_u e_u = 0;
-
     T_q comb(T_q a, T_q b) {
         return (a > b ? a : b);
     }
-
     T_q upd(T_q a, T_u b, int l, int r) {
         return a + b;
     }
-
     T_u comb_upd(T_u a, T_u b) {
         // a after b
         return a + b;

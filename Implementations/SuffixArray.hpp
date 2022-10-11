@@ -1,12 +1,9 @@
 struct SuffixArray {
-    const static int sigma = 27;
-
-    int n;
+    int n, sigma = 27;
     string str;
     vector<int> suf_arr, suf_pos, kasai;
     vector<vector<int>> rmq;
-
-    SuffixArray(int n, string str): n(n), str(str), suf_arr(n), suf_pos(n), kasai(n) {
+    SuffixArray(string str): n(str.length()), str(str), suf_arr(str.length()), suf_pos(str.length()), kasai(str.length()) {
         int eq_classes = 1;
         ++n, str += '$';
         vector<int> cnt(max(n, sigma), 0), c(n), sa_next(n), c_next(n);
@@ -14,7 +11,7 @@ struct SuffixArray {
         for(int i = 0; i < n; i++) {
             ++cnt[ctoi(str[i])];
         }
-        for(int i = 1; i < cnt.size(); i++) {
+        for(int i = 1; i < (int) cnt.size(); i++) {
             cnt[i] += cnt[i - 1];
         }
         for(int i = 0; i < n; i++) {
@@ -54,14 +51,12 @@ struct SuffixArray {
         }
         construct_lcp();
     };
-
     int ctoi(char c) {
         if(c == '$') {
             return 0;
         }
         return 1 + (c - 'a');
     }
-
     void construct_lcp() {
         int len = 0;
         for(int i = 0; i < n; i++) {
@@ -86,7 +81,6 @@ struct SuffixArray {
             }
         }
     }
-
     int lcp(int sf1, int sf2) {
         if(sf1 == sf2) { 
             return n - sf1;

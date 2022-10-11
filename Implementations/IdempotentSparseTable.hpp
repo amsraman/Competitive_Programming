@@ -1,10 +1,8 @@
 template <class B>
 struct SparseTable : public B {
     using T = typename B::T;
-
     int n;
     vector<vector<T>> st;
-
     SparseTable(int n, vector<T> & a): n(n), st(n, vector<T>(__lg(n) + 1, B::e)) {
         for(int i = 0; i < n; i++) {
             st[i][0] = a[i];
@@ -16,7 +14,6 @@ struct SparseTable : public B {
             }
         }
     }
-
     T qry(int l, int r) {
         int lev = __lg(r - l + 1);
         return B::comb(st[l][lev], st[r - (1 << lev) + 1][lev]);
