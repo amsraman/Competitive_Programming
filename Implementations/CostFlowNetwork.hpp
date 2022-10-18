@@ -8,9 +8,7 @@ struct CostFlowNetwork {
     vector<vector<pair<size_t, size_t>>> graph;
     vector<T_f> init_capacity, edge_capacity;
     vector<T_c> costs;
-
     CostFlowNetwork(size_t n): n(n), path(n), dist(n), graph(n) {};
-
     void add_edge(size_t ind1, size_t ind2, T_f capacity, T_c cost) {
         size_t front_edge = m++, back_edge = m++;
         graph[ind1].push_back({ind2, front_edge});
@@ -19,7 +17,6 @@ struct CostFlowNetwork {
         edge_capacity.push_back(0), edge_capacity.push_back(0);
         costs.push_back(cost), costs.push_back(-cost);
     }
-
     bool spfa(size_t source, size_t sink) {
         fill(dist.begin(), dist.end(), c_inf);
         dist[source] = 0;
@@ -28,8 +25,7 @@ struct CostFlowNetwork {
         q.push(source);
         in_queue[source] = true;
         while(!q.empty()) {
-            size_t u = q.front();
-            q.pop();
+            size_t u = q.front(); q.pop();
             in_queue[u] = false;
             for(pair<size_t, size_t> e: graph[u]) {
                 if(edge_capacity[e.second] > 0 && dist[u] < c_inf && dist[u] + costs[e.second] < dist[e.first]) {
@@ -44,7 +40,6 @@ struct CostFlowNetwork {
         }
         return dist[sink] < c_inf;
     }
-
     pair<T_f, T_c> min_cost_max_flow(size_t source, size_t sink) {
         T_f flow = 0;
         T_c cost = 0;

@@ -5,14 +5,12 @@ struct FlowNetwork {
     vector<size_t> level, ptr;
     vector<vector<size_t>> graph;
     vector<vector<T>> init_capacity, edge_capacity;
-
     FlowNetwork(size_t n): n(n), level(n), ptr(n), graph(n), init_capacity(n), edge_capacity(n) {
         for(size_t i = 0; i < n; i++) {
             init_capacity[i].resize(n, 0);
             edge_capacity[i].resize(n, 0);
         }
     };
-
     void add_edge(size_t ind1, size_t ind2, T weight) {
         if(init_capacity[ind1][ind2] == 0) {
             graph[ind1].push_back(ind2);
@@ -20,7 +18,6 @@ struct FlowNetwork {
         }
         init_capacity[ind1][ind2] += weight;
     }
-
     T dfs(size_t start, T cur_bottleneck, size_t end) {
         if(start == end) {
             return cur_bottleneck;
@@ -48,7 +45,6 @@ struct FlowNetwork {
         }
         return 0;
     }
-
     T dinic_flow(size_t source, size_t sink) {
         T flow = 0;
         bool path_exists = true;
