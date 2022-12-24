@@ -10,18 +10,10 @@ struct frac {
             num *= -1, den *= -1;
         }
     };
-    bool operator==(T cons) {
-        return (cons * this->den == this->num);
-    }
-    bool operator!=(T cons) {
-        return (cons * this->den != this->num);
-    }
-    bool operator<(T cons) {
-        return (this->num < cons * this->den);
-    }
-    bool operator>(T cons) {
-        return (this->num > cons * this->den);
-    }
+    bool operator==(T cons) {return (cons * this->den == this->num);}
+    bool operator!=(T cons) {return (cons * this->den != this->num);}
+    bool operator<(T cons) {return (this->num < cons * this->den);}
+    bool operator>(T cons) {return (this->num > cons * this->den);}
     frac operator+(const frac & f) const {
         T g = __gcd(this->den, f.den), lcm = this->den / g * f.den;
         return frac(this->num * (f.den / g) + f.num * (this->den / g), lcm);
@@ -46,22 +38,10 @@ struct frac {
         T g1 = __gcd(this->num, f.num), g2 = __gcd(this->den, f.den);
         return frac((this->num / g1) * (f.den / g2), (this->den / g2) * (f.num / g1));
     }
-    void operator+=(const frac & f) {
-        *this = *this + f;
-    }
-    void operator-=(const frac & f) {
-        *this = *this - f;
-    }
-    void operator*=(T coef) {
-        *this = *this * coef;
-    }
-    void operator*=(const frac & f) {
-        *this = *this * f;
-    }
-    void operator/=(T coef) {
-        *this = *this / coef;
-    }
-    void operator/=(const frac & f) {
-        *this = *this / f;
-    }
+    void operator+=(const frac & f) {*this = *this + f;}
+    void operator-=(const frac & f) {*this = *this - f;}
+    void operator*=(T coef) {*this = *this * coef;}
+    void operator*=(const frac & f) {*this = *this * f;}
+    void operator/=(T coef) {*this = *this / coef;}
+    void operator/=(const frac & f) {*this = *this / f;}
 };

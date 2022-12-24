@@ -1,61 +1,45 @@
-// Still WIP I guess
-template<class B>
-struct HLD : public B {
-    size_t n;
-    vector
+template <bool EDGE_VALS>
+struct HLD {
+    int n, t = 0;
+    vector<int> sz, par, nxt, in, out;
     vector<vector<int>> graph;
-
-    HLD(vector<vector<int>> & g) : n(g.size()), g(g)
-
-    void dfs_sz(int v = 0) {
-        sz[v] = 1;
-        for(int &u: g[v]) {
-            if(u == par[v]) {
-                continue;
-            }
-            par[u] = v, dfs_sz(u), sz[v] += sz[u];
-            if(sz[u] > sz[g[v][0]]) {
-                swap(u, g[v][0]);
+    HLD(vector<vector<int>> & graph) : n((int) graph.size()), graph(graph), sz(n, -1), par(n), nxt(n), in(n), out(n) {
+        for(int i = 0; i < n; i++) {
+            if(sz[i] == -1) {
+                nxt[i] = par[i] = i;
+                dfs_sz(i), dfs_hld(i);
             }
         }
     }
-
-    void dfs_hld(int v = 0) {
+    void dfs_sz(int v) { // generates sz and par, places heavy child first
+        sz[v] = 1;
+        for(int & u: graph[v]) {
+            if(u == par[v]) continue;
+            par[u] = v, dfs_sz(u), sz[v] += sz[u];
+            if(sz[u] > sz[graph[v][0]]) swap(u, graph[v][0]);
+        }
+    }
+    void dfs_hld(int v) { // generate preorder traversal, heavy chains
         in[v] = t++;
-        for(int u: g[v]) {
+        for(int u: graph[v]) {
             if(u != par[v]) {
-                nxt[u] = (u == g[v][0] ? nxt[v] : u), dfs_hld(u);
+                nxt[u] = (u == graph[v][0] ? nxt[v] : u), dfs_hld(u);
             }
         }
         out[v] = t;
     }
-
-    int path_qry(int u, int v) {
-        int ret = 0;
+    void process_path(int u, int v, function<void (int, int)> f) {
         while(nxt[u] != nxt[v]) {
-            if(in[u] < in[v]) {
-                swap(u, v);
-            }
-            ret += qry(in[nxt[u]], in[u]);
+            if(in[u] < in[v]) swap(u, v);
+            f(in[nxt[u]], in[u]);
             u = par[nxt[u]];
         }
-        if(in[u] > in[v]) {
-            swap(u, v);
-        }
-        return (u == v ? ret : ret + qry(in[u] + 1, in[v]));
+        if(u == v && EDGE_VALS) return;
+        if(in[u] > in[v]) swap(u, v);
+        f(in[u] + EDGE_VALS, in[v]); // exclude root if we have edge values
     }
-
-    void path_upd(int u, int v) {
-        while(nxt[u] != nxt[v]) {
-            if(in[u] < in[v]) {
-                swap(u, v);
-            }
-            upd(in[nxt[u]], in[u], 1);
-            u = par[nxt[u]];
-        }
-        if(in[u] > in[v]) {
-            swap(u, v);
-        }
-        upd(in[u] + 1, in[v], 1);
+    void process_subtree(int u, function<void (int, int)> f) {
+        if(sz[u] == 1 && EDGE_VALS) return;
+        f(in[u], out[u]);
     }
 };

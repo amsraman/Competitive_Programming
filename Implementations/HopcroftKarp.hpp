@@ -2,14 +2,11 @@ struct HopcroftKarp {
     int n;
     vector<int> dist, pair_u, pair_v;
     vector<vector<int>> graph;
-
     HopcroftKarp(int n): n(n), dist(n), pair_u(n), pair_v(n), graph(n) {};
-
     void add_edge(int u, int v) {
         // u \in U, v \in V
         graph[u].push_back(v);
     }
-
     bool bfs() {
         bool found = false;
         queue<int> q;
@@ -32,7 +29,6 @@ struct HopcroftKarp {
         }
         return found;
     }
-
     bool dfs(int u) {
         for(int v: graph[u]) {
             if(pair_v[v] == -1) {
@@ -48,7 +44,6 @@ struct HopcroftKarp {
         }
         return false;
     }
-
     int max_matching() {
         int res = 0;
         fill(pair_u.begin(), pair_u.end(), -1);

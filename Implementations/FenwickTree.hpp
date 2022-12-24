@@ -1,9 +1,9 @@
 template <typename T>
 struct FenwickTree {
-    size_t n;
+    int n;
     vector<T> bit;
-    FenwickTree(size_t n): n(n), bit(n, 0) {};
-    FenwickTree(int n, vector<T> & init): n(n), bit(n) {
+    FenwickTree(int n): n(n), bit(n, 0) {};
+    FenwickTree(vector<T> & init): n((int) init.size()), bit((int) init.size()) {
         copy(init.begin(), init.end(), bit.begin());
         for(int i = 1; i <= n; i++) {
             if(i + (i & -i) <= n) {

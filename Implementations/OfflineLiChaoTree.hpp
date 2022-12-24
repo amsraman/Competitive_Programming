@@ -5,11 +5,9 @@ struct LiChaoTree {
     const T INF = numeric_limits<T>::max();
     vector<T> coords;
     vector<L> seg;
-
     LiChaoTree(const vector<T> & coords): n(coords.size()), log(__lg(max(n - 1, 1)) + 1), sz(1 << log), coords(coords) {
         seg.resize(sz << 1, {0, INF});
     }
-
     T query(T pos) {
         int ind = lower_bound(coords.begin(), coords.end(), pos) - coords.begin();
         T ret = INF;
@@ -18,7 +16,6 @@ struct LiChaoTree {
         }
         return ret;
     }
-
     void add(int lo, int hi, L line, int lo_ind, int hi_ind, int ind) {
         if(hi_ind <= lo || hi <= lo_ind) {
             return;
@@ -38,13 +35,11 @@ struct LiChaoTree {
             add(lo, hi, line, mid, hi_ind, 2 * ind + 2);
         }
     }
-
     void add(int lo, int hi, L line) {
         lo = lower_bound(coords.begin(), coords.end(), lo) - coords.begin();
         hi = lower_bound(coords.begin(), coords.end(), hi) - coords.begin();
         add(lo, hi, line, 0, sz, 0);
     }
-
     void add(L line) {
         add(0, sz, line, 0, sz, 0);
     }

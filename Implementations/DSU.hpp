@@ -1,17 +1,14 @@
 struct DSU {
     int n;
     vector<int> link, sz;
-    DSU(int n): n(n), link(n), sz(n) {
-        for(int i = 0; i < n; i++) {
-            link[i] = i;
-            sz[i] = 1;
-        }
+    DSU(int n): n(n), link(n), sz(n, 1) {
+        iota(link.begin(), link.end(), 0);
     }
-    int f(int x) {
-        return (x == link[x] ? x : link[x] = f(link[x]));
+    int find(int x) {
+        return (x == link[x] ? x : link[x] = find(link[x]));
     }
     void unite(int x, int y) {
-        x = f(x), y = f(y);
+        x = find(x), y = find(y);
         if(sz[x] < sz[y]) {
             swap(x, y);
         }

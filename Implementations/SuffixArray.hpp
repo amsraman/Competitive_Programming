@@ -1,13 +1,12 @@
+template <int sigma = 27>
 struct SuffixArray {
-    int n, sigma = 27;
-    string str;
+    int n; string str;
     vector<int> suf_arr, suf_pos, kasai;
     vector<vector<int>> rmq;
     SuffixArray(string str): n(str.length()), str(str), suf_arr(str.length()), suf_pos(str.length()), kasai(str.length()) {
         int eq_classes = 1;
-        ++n, str += '$';
+        ++n, str += '#';
         vector<int> cnt(max(n, sigma), 0), c(n), sa_next(n), c_next(n);
-        suf_arr.resize(n);
         for(int i = 0; i < n; i++) {
             ++cnt[ctoi(str[i])];
         }
@@ -52,7 +51,7 @@ struct SuffixArray {
         construct_lcp();
     };
     int ctoi(char c) {
-        if(c == '$') {
+        if(c == '#') {
             return 0;
         }
         return 1 + (c - 'a');

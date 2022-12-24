@@ -1,8 +1,6 @@
 template <typename T, bool persistent = false>
 struct Node {
-    T val;
-    int rank;
-    Node *left, *right;
+    T val; int rank; Node *left, *right;
     Node(T val): val(val), rank(0), left(NULL), right(NULL) {};
     friend Node* meld(Node* h1, Node* h2) {
         if(!h1 || !h2) return (h1 ? h1 : h2);
