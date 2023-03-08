@@ -22,7 +22,6 @@ bool ok(int r, int c) {
 }
 
 void search(int r, int c, int num_moves) {
-    ++loop_counter;
     if(r == 0 && c == n - 1) {
         if(num_moves == n * n - 1) {
             ++ans;

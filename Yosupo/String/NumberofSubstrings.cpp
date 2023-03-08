@@ -9,7 +9,7 @@ struct SuffixArray {
     int n; string str;
     vector<int> suf_arr, suf_pos, kasai;
     vector<vector<int>> rmq;
-    SuffixArray(string str): n(str.length()), str(str), suf_arr(str.length()), suf_pos(str.length()), kasai(str.length()) {
+    SuffixArray(string str): n(str.length()), str(str), suf_arr(str.length() + 1), suf_pos(str.length()), kasai(str.length()) {
         int eq_classes = 1;
         ++n, str += '$';
         vector<int> cnt(max(n, sigma), 0), c(n), sa_next(n), c_next(n);

@@ -9,7 +9,7 @@ struct Line {
     }
 };
 
-struct LineContainer : multiset<Line, less<>> {
+struct LineContainer : multiset<Line, less<>> { // defaults to max
     static const ll INF = LLONG_MAX;
     ll div(ll x, ll y) {
         return x / y - ((x ^ y) < 0 && x % y);
@@ -19,24 +19,15 @@ struct LineContainer : multiset<Line, less<>> {
             x->ep = INF;
             return false;
         }
-        if(x->m == y->m) {
-            x->ep = (x->b < y->b ? -INF : INF);
-        } else {
-            x->ep = div(x->b - y->b, y->m - x->m);
-        }
+        if(x->m == y->m) x->ep = (x->b < y->b ? -INF : INF);
+        else x->ep = div(x->b - y->b, y->m - x->m);
         return x->ep >= y->ep;
     }
     void add(ll m, ll b) {
         auto z = insert({m, b, 0}), y = z++, x = y;
-        while(upd(y, z)) {
-            z = erase(z);
-        }
-        if(x != begin() && upd(--x, y)) {
-            upd(x, y = erase(y));
-        }
-        while((y = x) != begin() && (--x)->ep >= y->ep) {
-            upd(x, erase(y));
-        }
+        while(upd(y, z)) z = erase(z);
+        if(x != begin() && upd(--x, y)) upd(x, y = erase(y));
+        while((y = x) != begin() && (--x)->ep >= y->ep) upd(x, erase(y));
     }
     ll query(ll x) {
         assert(!empty());

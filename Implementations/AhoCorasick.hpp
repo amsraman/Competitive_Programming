@@ -1,28 +1,23 @@
 struct AhoCorasick {
     const static int sigma = 26;
-
-    size_t node_count;
-    vector<size_t> failure_link, dictionary_link;
-    vector<array<size_t, sigma>> trie;
+    int dict_size, node_count = 0;
+    vector<int> failure_link, dictionary_link, end_point;
+    vector<array<int, sigma>> trie;
     vector<bool> terminal;
-
-    AhoCorasick(vector<string> & dict) {
-        node_count = 0;
+    AhoCorasick(const vector<string> & dict): dict_size((int) dict.size()), end_point((int) dict.size()) {
         build(dict);
     }
-
     void create_new_node() {
         failure_link.push_back(0), dictionary_link.push_back(0), terminal.push_back(false);
-        array<size_t, sigma> trie_node;
+        array<int, sigma> trie_node;
         trie_node.fill(0);
         trie.push_back(trie_node);
         node_count++;
     }
-
-    void build(vector<string> & dict) {
+    void build(const vector<string> & dict) {
         create_new_node();
-        for(size_t i = 0; i < dict.size(); i++) {
-            size_t cur = 0;
+        for(int i = 0; i < (int) dict.size(); i++) {
+            int cur = 0;
             for(char c: dict[i]) {
                 if(!trie[cur][c - 'a']) {
                     trie[cur][c - 'a'] = node_count;
@@ -30,7 +25,7 @@ struct AhoCorasick {
                 }
                 cur = trie[cur][c - 'a'];
             }
-            terminal[cur] = true;
+            terminal[cur] = true; end_point[i] = cur;
         }
         queue<int> q; q.push(0);
         while(!q.empty()) {
@@ -46,15 +41,12 @@ struct AhoCorasick {
             }
         }
     }
-
-    int process(string qry_string) {
-        // There's many different things you can do with an AC automaton :P
-        // Guess I'll just display a basic example that counts the number of dictionary matches
-        size_t cur = 0;
-        int num_matches = 0;
+    void process(const string & qry_string) { // modify this ig
+        int cur = 0, num_matches = 0;
+        vector<bool> hit(node_count, false);
         for(char c: qry_string) {
             cur = trie[cur][c - 'a'];
-            size_t dict_ver = cur;
+            int dict_ver = cur;
             while(dict_ver > 0) {
                 if(terminal[dict_ver]) {
                     ++num_matches;

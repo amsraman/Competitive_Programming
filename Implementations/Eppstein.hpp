@@ -1,5 +1,5 @@
 template <typename T>
-vector<T> Eppstein(vector<vector<tuple<int, T, int>>> & graph, vector<vector<tuple<int, T, int>>> & reverse_graph, int s, int t, int k) {
+vector<T> eppstein(vector<vector<tuple<int, T, int>>> & graph, vector<vector<tuple<int, T, int>>> & reverse_graph, int s, int t, int k) {
     using LeftistHeap = Node<pair<T, int>, true>*;
     using state = tuple<T, int, LeftistHeap>;
     int n = graph.size();

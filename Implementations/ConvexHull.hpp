@@ -1,10 +1,10 @@
 template <typename T>
-vector<Point<T>> ConvexHull(vector<Point<T>> points) {
+vector<Point<T>> convex_hull(vector<Point<T>> points) {
     if(points.size() <= 1) {
         return points;
     }
     sort(points.begin(), points.end());
-    vector<Point<double>> hull(points.size() + 1);
+    vector<Point<T>> hull(points.size() + 1);
     int s = 0, t = 0;
     for(int it = 2; it--; s = --t, reverse(points.begin(), points.end())) {
         for(Point p: points) {

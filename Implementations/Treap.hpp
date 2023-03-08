@@ -1,55 +1,49 @@
-// This is ok but I need to make it better
-template <typename T>
-struct Node {
-    T key;
-    int priority, sz;
-    Node *l, *r;
-    Node(T key): key(key), priority(rand()), sz(1), l(NULL), r(NULL) {};
-    Node(T key, int priority): key(key), priority(priority), sz(1), l(NULL), r(NULL) {};
-    void refresh(Treap t) {
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+template <class B> struct Treap {
+    using T_k = typename B::T_k;
+    using T_v = typename B::T_v;
+    T_k key; T_v val, aug; int pr, size;
+    Treap *l, *r;
+    inline int rand_int() {return uniform_int_distribution<int>(INT_MIN, INT_MAX)(rng);}
+    Treap(T_v val): val(val), aug(val), pr(rand_int()), size(1), l(NULL), r(NULL) {};
+    friend void refresh(Treap *t) {
         if(t) {
-            t->sz = 1 + (t->l ? t->l->sz : 0) + (t->r ? t->r->sz : 0);
+            t->size = 1 + (t->l ? t->l->size : 0) + (t->r ? t->r->size : 0);
+            t->aug = B::comb(B::comb(t->l ? t->l->aug : B::e, t->val), t->r ? t->r->aug : B::e);
         }
     }
-    friend void split_by_key(Treap t, int key, Treap & l, Treap & r) {
-        if(!t) {
-            l = r = NULL;
-        } else if(t->key <= key) {
-            split_by_key(t->r, key, t->r, r), l = t;
+    friend pair<Treap*, Treap*> split_by_order(Treap *t, int sz) {
+        if(!t) return {NULL, NULL};
+        int left_sz = (t->l ? t->l->size : 0);
+        if(left_sz < sz) {
+            auto [lp, rp] = split_by_order(t->r, sz - left_sz - 1);
+            t->r = lp; refresh(t);
+            return {t, rp};
         } else {
-            split_by_key(t->l, key, l, t->l), r = t;
+            auto [lp, rp] = split_by_order(t->l, sz);
+            t->l = rp; refresh(t);
+            return {lp, t};
         }
-        refresh(t);
     }
-    friend void split_by_order(Treap t, int num, Treap & l, Treap & r) {
-        if(!t) {
-            l = r = NULL;
-        } else if((t->l ? t->l->sz : 0) + 1 <= num) {
-            split_by_order(t->r, num - (t->l ? t->l->sz : 0) - 1, t->r, r), l = t;
+    friend Treap* join(Treap *l, Treap *r) {
+        if(!l || !r) return (l ?: r);
+        if(l->pr >= r->pr) {
+            l->r = join(l->r, r); refresh(l);
+            return l;
         } else {
-            split_by_order(t->l, num, l, t->l), r = t;
+            r->l = join(l, r->l); refresh(r);
+            return r;
         }
-        refresh(t);
-    }
-    friend void join(Treap & t, Treap l, Treap r) {
-        if(!l || !r) {
-            t = l ? l : r;
-        } else if(l->priority > r->priority) {
-            join(l->r, l->r, r), t = l;
-        } else {
-            join(r->l, l, r->l), t = r;
-        }
-        refresh(t);
-    }
-    friend void insert(Treap & t, Treap new_node) {
-        if(!t) {
-            t = new_node;
-        } else if(new_node->priority > t->priority) {
-            split_by_key(t, new_node->key, new_node->l, new_node->r), t = new_node;
-        } else {
-            insert(t->key <= new_node->key ? t->r : t->l, new_node);
-        }
-        refresh(t);
     }
 };
-typedef Node<int>* Treap;
+
+// Sample Monoid
+
+struct Monoid {
+    using T_k = monostate;
+    using T_v = long long;
+    static const T_v e = 0;
+    static T_v comb(T_v a, T_v b) {
+        return a + b;
+    }
+};

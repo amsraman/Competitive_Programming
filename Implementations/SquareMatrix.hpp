@@ -1,5 +1,5 @@
 template <typename T, int N> // templated square matrix
-struct Matrix : array<array<int, N>, N> {
+struct Matrix : array<array<T, N>, N> {
     Matrix() {
         for(int i = 0; i < N; i++) {
             (*this)[i].fill(0);

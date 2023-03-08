@@ -3,7 +3,7 @@ struct Node {
     T val; int rank; Node *left, *right;
     Node(T val): val(val), rank(0), left(NULL), right(NULL) {};
     friend Node* meld(Node* h1, Node* h2) {
-        if(!h1 || !h2) return (h1 ? h1 : h2);
+        if(!h1 || !h2) return h1 ?: h2;
         if(h1->val > h2->val) swap(h1, h2);
         Node* res = (persistent ? new Node(*h1) : h1);
         res->right = meld(h1->right, h2);
@@ -19,4 +19,4 @@ struct Node {
     friend Node* pop(Node* h) {
         return (!h ? h : meld(h->left, h->right));
     }
-};
+}; 

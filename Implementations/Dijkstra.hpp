@@ -1,5 +1,5 @@
 template <typename T>
-vector<pair<T, int>> Dijkstra(vector<vector<pair<int, T>>> & graph, int s) {
+vector<pair<T, int>> dijkstra(vector<vector<pair<int, T>>> & graph, int s) {
     // Returns (distance, parent) pairs
     int n = graph.size();
     T INF = numeric_limits<T>::max();

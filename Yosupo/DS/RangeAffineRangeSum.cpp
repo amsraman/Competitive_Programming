@@ -1,4 +1,4 @@
-// 647 ms
+// 610 ms
 #include <bits/stdc++.h>
 #define f first
 #define s second
@@ -7,114 +7,78 @@ using namespace std;
 
 const int mod = 998244353;
 
-template<class B>
+template <class B>
 struct LazySegTree : public B {
     using T_q = typename B::T_q;
     using T_u = typename B::T_u;
-
-    int n, sz, log;
-    vector<T_q> seg;
-    vector<T_u> lazy;
-
+    int n, sz, log; vector<T_q> seg; vector<T_u> lazy;
     LazySegTree(int n): n(n), log(__lg(max(n - 1, 1)) + 1) {
         sz = (1 << log), seg.resize(sz << 1, B::e_q), lazy.resize(sz << 1, B::e_u);
     }
-
     LazySegTree(vector<T_q> & init): n((int) init.size()), log(__lg(max(n - 1, 1)) + 1) {
         sz = (1 << log), seg.resize(sz << 1, B::e_q), lazy.resize(sz << 1, B::e_u);
-        bld(init, 0, n - 1, 0);
+        copy(init.begin(), init.end(), seg.begin() + sz);
+        for(int i = sz - 1; i > 0; i--) refresh(i);
     }
-
-    void bld(const vector<T_q> & init, int lo, int hi, int ind) {
-        if(lo == hi) {
-            seg[ind] = init[lo];
-            return;
-        }
-        int mid = (lo + hi) >> 1;
-        bld(init, lo, mid, 2 * ind + 1), bld(init, mid + 1, hi, 2 * ind + 2);
-        seg[ind] = B::comb(seg[2 * ind + 1], seg[2 * ind + 2]);
+    void refresh(int ind) {
+        seg[ind] = B::comb(seg[2 * ind], seg[2 * ind + 1]);
     }
-
     void app(int ind, int lo, int hi, T_u delta) {
         seg[ind] = B::upd(seg[ind], delta, lo, hi);
         lazy[ind] = B::comb_upd(delta, lazy[ind]);
     }
-
     void push(int ind, int lo, int hi) {
         if(lo != hi) {
             int mid = (lo + hi) >> 1;
-            app(2 * ind + 1, lo, mid, lazy[ind]);
-            app(2 * ind + 2, mid + 1, hi, lazy[ind]);
+            app(2 * ind, lo, mid, lazy[ind]);
+            app(2 * ind + 1, mid + 1, hi, lazy[ind]);
         }
         lazy[ind] = B::e_u;
     }
-
-    T_q qry(int lo, int hi, int lo_ind, int hi_ind, int ind) {
-        if(lo <= lo_ind && hi_ind <= hi) {
-            return seg[ind];
+    void push_from_root(int ind) {
+        ind += sz;
+        for(int i = log; i > 0; i--) {
+            push(ind >> i, (ind >> i << i) - sz, (((ind >> i) + 1) << i) - sz - 1);
         }
-        int mid = (lo_ind + hi_ind) >> 1;
-        if(lazy[ind] != B::e_u) {
-            push(ind, lo_ind, hi_ind);
-        }
-        T_q op1 = (lo <= mid ? qry(lo, hi, lo_ind, mid, 2 * ind + 1) : B::e_q);
-        T_q op2 = (mid < hi ? qry(lo, hi, mid + 1, hi_ind, 2 * ind + 2) : B::e_q);
-        return B::comb(op1, op2);
     }
-
     T_q qry(int lo, int hi) {
-        return qry(lo, hi, 0, n - 1, 0);
+        push_from_root(lo), push_from_root(hi); T_q ret1 = B::e_q, ret2 = B::e_q;
+        for(lo += sz, hi += sz; lo <= hi; lo >>= 1, hi >>= 1) {
+            if(lo & 1) ret1 = B::comb(ret1, seg[lo++]);
+            if(hi & 1 ^ 1) ret2 = B::comb(seg[hi--], ret2);
+        }
+        return B::comb(ret1, ret2);
     }
-
-    void upd(int lo, int hi, T_u delta, int lo_ind, int hi_ind, int ind) {
-        if(lo <= lo_ind && hi_ind <= hi) {
-            app(ind, lo_ind, hi_ind, delta);
-            return;
-        }
-        int mid = (lo_ind + hi_ind) >> 1;
-        if(lazy[ind] != B::e_u) {
-            push(ind, lo_ind, hi_ind);
-        }
-        if(lo <= mid) {
-            upd(lo, hi, delta, lo_ind, mid, 2 * ind + 1);
-        }
-        if(mid < hi) {
-            upd(lo, hi, delta, mid + 1, hi_ind, 2 * ind + 2);
-        }
-        seg[ind] = B::comb(seg[2 * ind + 1], seg[2 * ind + 2]);
-    }
-
     void upd(int lo, int hi, T_u delta) {
-        return upd(lo, hi, delta, 0, n - 1, 0);
+        push_from_root(lo), push_from_root(hi); lo += sz, hi += sz;
+        for(int l = lo, r = hi, lvl = 0; l <= r; l >>= 1, r >>= 1, ++lvl) {
+            if(l & 1) app(l, (l << lvl) - sz, (l + 1 << lvl) - sz - 1, delta), l++;
+            if(r & 1 ^ 1) app(r, (r << lvl) - sz, (r + 1 << lvl) - sz - 1, delta), r--;
+        }
+        for(int i = 1; i <= log; i++) {
+            if(lo >> i << i != lo) refresh(lo >> i);
+            if((hi + 1) >> i << i != hi + 1) refresh(hi >> i);
+        }
     }
 };
 
 struct Monoid {
-    using T_q = int;
-    const T_q e_q = 0;
-
-    using T_u = pair<int, int>;
-    const T_u e_u = {1, 0};
-
+    using T_q = int; const T_q e_q = 0;
+    using T_u = pair<int, int>; const T_u e_u = {1, 0};
     T_q comb(T_q a, T_q b) {
         return (a + b >= mod ? a + b - mod : a + b);
     }
-
     T_q upd(T_q a, T_u b, int l, int r) {
         return (1LL * b.f * a + 1LL * b.s * (r - l + 1)) % mod;
     }
-
-    T_u comb_upd(T_u a, T_u b) {
-        // a after b
+    T_u comb_upd(T_u a, T_u b) { // a after b
         return {(1LL * a.f * b.f) % mod, (1LL * a.f * b.s + a.s) % mod};
     }
 };
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    int n, q;
-    cin >> n >> q;
+    ios_base::sync_with_stdio(false); cin.tie(0);
+    int n, q; cin >> n >> q;
     vector<int> a(n);
     for(int i = 0; i < n; i++) {
         cin >> a[i];

@@ -1,4 +1,4 @@
-void EnumerateTriangles(const vector<vector<int>> & graph, function<void (int, int, int)> f) {
+void enumerate_triangles(const vector<vector<int>> & graph, function<void (int, int, int)> f) {
     int n = graph.size();
     vector<vector<int>> bigger_neighbors(n);
     for(int i = 0; i < n; i++) {
@@ -23,7 +23,7 @@ void EnumerateTriangles(const vector<vector<int>> & graph, function<void (int, i
 }
 
 template <typename T>
-T CountFourCycles(const vector<vector<int>> & graph) {
+T count_four_cycles(const vector<vector<int>> & graph) {
     int n = graph.size();
     T ans = 0;
     vector<pair<int, int>> deg_pair(n);

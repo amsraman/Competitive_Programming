@@ -1,10 +1,9 @@
 struct HopcroftKarp {
-    int n;
+    int n; 
     vector<int> dist, pair_u, pair_v;
     vector<vector<int>> graph;
     HopcroftKarp(int n): n(n), dist(n), pair_u(n), pair_v(n), graph(n) {};
-    void add_edge(int u, int v) {
-        // u \in U, v \in V
+    void add_edge(int u, int v) { // u \in U, v \in V
         graph[u].push_back(v);
     }
     bool bfs() {

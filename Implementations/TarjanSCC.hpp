@@ -27,7 +27,7 @@ struct TarjanSCC {
             }
         }
     }
-    vector<vector<int>> condensation_graph() { // completely untested but I think it should just work
+    vector<vector<int>> condensation_graph() {
         vector<vector<int>> res(scc_count);
         vector<bool> vis(scc_count, false);
         for(int comp = 0; comp < scc_count; comp++) {

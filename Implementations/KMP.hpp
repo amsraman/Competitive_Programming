@@ -1,4 +1,4 @@
-vector<int> KMP(const string & s) {
+vector<int> kmp_function(const string & s) {
     int n = s.length();
     vector<int> kmp(n, 0);
     for(int i = 1, j = 0; i < n; i++) {
@@ -10,9 +10,9 @@ vector<int> KMP(const string & s) {
     return kmp;
 }
 
-vector<int> MatchKMP(const string & s, const string & t) { // returns starting indices
+vector<int> kmp_match(const string & s, const string & t) { // returns starting indices
     int n = s.length(), m = t.length();
-    vector<int> kmp = KMP(t), res;
+    vector<int> kmp = kmp_function(t), res;
     for(int i = 0, j = 0; i < n; i++) {
         while(j > 0 && s[i] != t[j]) {
             j = kmp[j - 1];

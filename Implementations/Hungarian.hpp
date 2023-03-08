@@ -1,6 +1,5 @@
 template <typename T>
-pair<T, vector<int>> Hungarian(const vector<vector<T>> & costs) {
-    // Matches columns to rows
+pair<T, vector<int>> hungarian(const vector<vector<T>> & costs) { // Matches columns to rows
     int n = costs.size() - 1, m = costs[0].size() - 1;
     vector<int> match(m + 1, 0);
     vector<T> u(n + 1, 0), v(m + 1, 0);

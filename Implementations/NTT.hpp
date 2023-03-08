@@ -1,5 +1,5 @@
 namespace NTT {
-    const int mod = 998244353;
+    const int mod = 998244353, generator = 3;
 
     int mul(int a, int b) {
         return (1LL * a * b) % mod;

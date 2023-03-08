@@ -4,11 +4,8 @@
 using namespace std;
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
-    int q;
-    cin >> q;
-    int node_count = 0;
+    ios_base::sync_with_stdio(false); cin.tie(0);
+    int q, node_count = 0; cin >> q;
     vector<int> cnt(30 * q, 0);
     vector<vector<int>> trie(30 * q, vector<int>(2, 0));
     auto ins = [&](int x, int sg) {

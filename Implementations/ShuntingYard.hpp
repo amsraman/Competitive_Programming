@@ -1,5 +1,5 @@
 template <typename T>
-T ShuntingYard(string exp) {
+T shunting_yard(string exp) {
     auto prec = [](char op) {
         if(op == '*' || op == '/') {
             return 2;

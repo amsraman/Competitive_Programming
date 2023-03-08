@@ -1,6 +1,5 @@
 struct DSU {
-    int n;
-    vector<int> link, sz;
+    int n; vector<int> link, sz;
     DSU(int n): n(n), link(n), sz(n, 1) {
         iota(link.begin(), link.end(), 0);
     }

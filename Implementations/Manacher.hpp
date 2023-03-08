@@ -1,4 +1,4 @@
-vector<int> Manacher(const string & s) { // generates 1-indexed odd palindrome radii
+vector<int> manacher(const string & s) { // generates 1-indexed odd palindrome radii
     int n = s.length();
     vector<int> pal(n, 0);
     for(int i = 0, l = 0, r = 0; i < n; i++) {
@@ -13,7 +13,7 @@ vector<int> Manacher(const string & s) { // generates 1-indexed odd palindrome r
     return pal;
 }
 
-vector<int> ManacherAll(const string & s) { // returns palindrome lengths for 2n-1 centers
+vector<int> manacher_all(const string & s) { // returns palindrome lengths for 2n-1 centers
     int n = s.length();
     string aug = "#"; // intersperse with # signs
     for(char c: s) {

@@ -1,4 +1,4 @@
-vector<int> Z(const string & s) {
+vector<int> z_function(const string & s) {
     int n = s.length();
     vector<int> z(n, 0);
     for(int i = 1, l = 0, r = 0; i < n; i++) {
