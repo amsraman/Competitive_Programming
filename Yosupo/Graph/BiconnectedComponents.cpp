@@ -1,3 +1,8 @@
+// 649 ms
+#include <bits/stdc++.h>
+
+using namespace std;
+
 struct TarjanBCC {
     int n, time = 0, bcc_count = 0, cut_count = 0;
     vector<int> in, lp, bcc;
@@ -65,3 +70,23 @@ struct TarjanBCC {
         return res;
     }
 };
+
+int main() {
+    ios_base::sync_with_stdio(false); cin.tie(0);
+    int n, m; cin >> n >> m;
+    vector<vector<int>> g(n);
+    for(int i = 0, a, b; i < m; i++) {
+        cin >> a >> b;
+        g[a].push_back(b), g[b].push_back(a);
+    }
+    TarjanBCC bcc(g);
+    cout << bcc.bcc_count - bcc.cut_count << '\n';
+    for(auto comp: bcc.comp_vertices) {
+        if(comp.empty()) continue;
+        cout << comp.size() << " ";
+        for(auto v: comp) {
+            cout << v << " ";
+        }
+        cout << '\n';
+    }
+}
